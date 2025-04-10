@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <time.h>
 
+// CALL WITH ./parallel_cuda_mmult <matrix_size> 
+// ex: ./parallel_cuda_mmult 256 
+
 // Main multiplication work area
 __global__ void kernel_mult(float* a, float* b, float* c, int blk) {
         int row = blockIdx.y * blockDim.y + threadIdx.y;
