@@ -12,6 +12,9 @@
    Reduced to a serial program for comparison.
 
 */
+
+// Modified for simplified baseline use
+// call with ./serial_mmult 1 <matrix size>
     
 #include <stdio.h>
 #include <stdlib.h>     // For malloc, free, rand, atoi, exit
