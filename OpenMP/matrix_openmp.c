@@ -12,7 +12,7 @@ void InitBlock(float *a, float *b, float *c, int blk) {
     }
 }
 
-void BlockMult(float* c, float* a, float* b, int blk) {
+void BlockMult(float* a, float* b, float* c, int blk) {
     #pragma omp parallel for collapse(2) // Paralllize Outer Two Loops
 
     for (int i = 0; i < blk; i++){
