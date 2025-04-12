@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>     // For malloc, free, rand, atoi, exit
-#include <time.h>       // WE ADDED! FOR TIMING
 #include <omp.h> // Library for OpenMP
 
+// Matrices are randomized here
 void InitBlock(float *a, float *b, float *c, int blk) {
     int len = blk * blk;
     for (int ind = 0; ind < len; ind++) {
         a[ind] = (float)(rand() % 1000) / 100.0;
-        b[ind] = (float)(rand() % 1000) / 100.0; //WE CHANGED! TO MAKE BOTH MATRICIES RANDOM
+        b[ind] = (float)(rand() % 1000) / 100.0;
         c[ind] = 0.0;
     }
 }
@@ -40,40 +40,41 @@ void PrintMatrix(const char* label, float* mat, int blk) {
 
 // Main Solution
 int main(int argc, char* argv[]) {
-    if (argc != 3) {
-        fprintf(stderr, "usage: mmult m blk\n");
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s Matrix Size\n", argv[0]);
         exit(1);
     }
 
-    int sidesize = atoi(argv[1]) * atoi(argv[2]);
-    float *a = (float*)malloc(sizeof(float) * sidesize * sidesize);
-    float *b = (float*)malloc(sizeof(float) * sidesize * sidesize);
-    float *c = (float*)malloc(sizeof(float) * sidesize * sidesize);
+    int matrixSize = atoi(argv[1]);
+    float *a = (float*)malloc(sizeof(float) * matrixSize * matrixSize);
+    float *b = (float*)malloc(sizeof(float) * matrixSize * matrixSize);
+    float *c = (float*)malloc(sizeof(float) * matrixSize * matrixSize);
 
     if (!(a && b && c)) {
-        fprintf(stderr, "%s: out of memory!\n", argv[0]);
+        fprintf(stderr, "%s: Argument is too large. Ran out of memory! Try again with smaller values.\n", argv[0]);
         free(a); free(b); free(c);
         exit(2);
     }
 
     srand(time(NULL)); // Seed rand
-    InitBlock(a, b, c, sidesize);
+    InitBlock(a, b, c, matrixSize);
 
     // Print The Matrix
-    PrintMatrix("Matrix A", a, sidesize);
-    PrintMatrix("Matrix B", b, sidesize);
+    PrintMatrix("Matrix A", a, matrixSize); // Matrix A Printed Out
+    PrintMatrix("Matrix B", b, matrixSize); // Matrix B Printed Out
 
     // Time
         // This is implementing the OpenMP Time Library
-    double startTime = omp_get_wtime();
-    BlockMult(a,b,c,sidesize);
-    double endTime = omp_get_wtime();
+        // omp_get_wtime(): Runs in seconds, is converted later on to ms using conversion methods. 
+    double startTime = omp_get_wtime(); // Time Starts
+    BlockMult(a,b,c,matrixSize);
+    double endTime = omp_get_wtime(); // Time Ends
 
     double totalTime = endTime - startTime; // The time  being calculted
 
-    PrintMatrix("Result Matrix C", c, sidesize);
+    PrintMatrix("Result Matrix C", c, matrixSize); // Matrix C Printed Out
 
-    printf("\nDone. Matrix multiplication took %.6f seconds.\n", totalTime);
+    printf("\nDone. Matrix multiplication took %.6f miliseconds.\n", totalTime * 1000.0); // Convert time to ms
 
     free(a); free(b); free(c);
     return 0;
