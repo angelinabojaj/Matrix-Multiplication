@@ -2,7 +2,7 @@
 #include <stdlib.h>     // For malloc, free, rand, atoi, exit
 #include <omp.h> // Library for OpenMP
 
-// Matrices are randomized here
+// Matrices are created here with the power of randomization.
 void InitBlock(float *a, float *b, float *c, int blk) {
     int len = blk * blk;
     for (int ind = 0; ind < len; ind++) {
@@ -51,12 +51,16 @@ int main(int argc, char* argv[]) {
     float *c = (float*)malloc(sizeof(float) * matrixSize * matrixSize);
 
     if (!(a && b && c)) {
-        fprintf(stderr, "%s: Argument is too large. Ran out of memory! Try again with smaller values.\n", argv[0]);
+        fprintf(stderr, "%s: Argument is too large. Ran out of memory! Try again with smaller values.\n", argv[0]); // Error Prevention Line
         free(a); free(b); free(c);
         exit(2);
     }
 
-    srand(time(NULL)); // Seed rand
+    // Setting Threads
+        // Change the number of threads as needed per the matrix size requirements.
+    omp_set_num_threads(1);
+    printf("%d threads are being used for calculation", omp_get_thread_num);
+
     InitBlock(a, b, c, matrixSize);
 
     // Print The Matrix
