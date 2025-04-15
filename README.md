@@ -1,4 +1,4 @@
-#Parallel Matrix Multiplication Project 
+##Parallel Matrix Multiplication Project 
 
 This project explores and compares matrix multiplication using three methods:
 - Serial (baseline)
